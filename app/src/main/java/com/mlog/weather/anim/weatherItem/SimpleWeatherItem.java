@@ -5,7 +5,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 
 /**
- * com.mlog.weather.anim.weatherItem
+ * 处理IWeatherItem通用方法
  *
  * @author CJL
  * @since 2015-09-11
@@ -27,7 +27,7 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
 
     protected int mStatus = STATUS_NOT_START;
 
-    protected int mRepeatMode = MODE_REPEAT;
+//    protected int mRepeatMode = MODE_REPEAT;
 
 
     @Override
@@ -73,8 +73,8 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
         mDelayTime = delay;
     }
 
-    @Override
-    public void setRepeatMode(@WeatherItemRepeatMode int repeatMode) {
-        mRepeatMode = repeatMode;
-    }
+//    @Override
+//    public void setRepeatMode(@WeatherItemRepeatMode int repeatMode) {
+//        mRepeatMode = repeatMode;
+//    }
 }

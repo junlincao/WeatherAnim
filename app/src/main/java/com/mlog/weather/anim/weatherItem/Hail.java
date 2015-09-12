@@ -3,6 +3,9 @@ package com.mlog.weather.anim.weatherItem;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.SystemClock;
+
+import java.util.Random;
 
 /**
  * 冰雹
@@ -17,7 +20,6 @@ public class Hail extends SimpleWeatherItem {
     private static final int SPLIT_TIME = 400;
      //下落步骤中完全透明
     private static final float FULL_ALPHA_PROGRESS = 0.7f;
-
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
@@ -36,11 +38,7 @@ public class Hail extends SimpleWeatherItem {
         } else if (t < DROP_TIME + SPLIT_TIME) {
             drawSplit(canvas, paint, (t - DROP_TIME) * 1f / SPLIT_TIME);
         } else {
-            if (mRepeatMode == MODE_REPEAT) {
-                mStartTime += DROP_TIME + SPLIT_TIME;
-            } else {
-                stop();
-            }
+            stop();
         }
     }
 
@@ -55,7 +53,7 @@ public class Hail extends SimpleWeatherItem {
     }
 
     private void drawSplit(Canvas canvas, Paint paint, float progress) {
-
+        //TODO
     }
 
 }

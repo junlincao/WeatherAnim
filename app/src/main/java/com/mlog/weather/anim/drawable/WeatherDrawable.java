@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,16 +28,18 @@ public abstract class WeatherDrawable extends Drawable {
 
     private ArrayList<IWeatherItem> mWeatherItems = new ArrayList<>();
 
-    protected WeatherDrawable() {
-        addWeatherItem(mWeatherItems);
-    }
+    protected boolean mIsRunning = false;
 
     /**
      * 启动动画
-     * <p>
+     * <p/>
      * 除非调用stopAnimation，否则不会停止
      */
     public void startAnimation() {
+        if (mIsRunning || mWeatherItems.size() == 0) {
+            return;
+        }
+
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -48,6 +51,19 @@ public abstract class WeatherDrawable extends Drawable {
         long time = SystemClock.elapsedRealtime();
         for (IWeatherItem wi : mWeatherItems) {
             wi.start(time);
+        }
+        mIsRunning = true;
+    }
+
+
+    @Override
+    public void setBounds(int left, int top, int right, int bottom) {
+        super.setBounds(left, top, right, bottom);
+
+        mWeatherItems.clear();
+        addWeatherItem(mWeatherItems, getBounds());
+        if (!mIsRunning) {
+            startAnimation();
         }
     }
 
@@ -64,6 +80,7 @@ public abstract class WeatherDrawable extends Drawable {
         for (IWeatherItem wi : mWeatherItems) {
             wi.stop();
         }
+        mIsRunning = false;
     }
 
     @Override
@@ -93,6 +110,7 @@ public abstract class WeatherDrawable extends Drawable {
      * 添加天气动态组件
      *
      * @param weatherItems 组件集合
+     * @param rect         Drawable Bounds
      */
-    abstract void addWeatherItem(List<IWeatherItem> weatherItems);
+    abstract void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect);
 }

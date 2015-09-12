@@ -2,9 +2,11 @@ package com.mlog.weather.anim;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.mlog.weather.anim.drawable.WeatherDrawable;
 
@@ -14,7 +16,7 @@ import com.mlog.weather.anim.drawable.WeatherDrawable;
  * @author CJL
  * @since 2015-09-11
  */
-public class WeatherAnimView extends View {
+public class WeatherAnimView extends ImageView {
 
 
     public WeatherAnimView(Context context) {
@@ -35,19 +37,9 @@ public class WeatherAnimView extends View {
     }
 
     @Override
-    public void setBackground(Drawable background) {
-        setBackgroundDrawable(background);
-    }
-
-    @Override
-    public void setBackgroundResource(int resid) {
-        super.setBackgroundResource(resid);
-    }
-
-    @Override
-    public void setBackgroundDrawable(Drawable background) {
-        Drawable d = getBackground();
-        if (d != null && d.equals(background)) {
+    public void setImageDrawable(Drawable drawable) {
+        Drawable d = getDrawable();
+        if (d != null && d.equals(drawable)) {
             return;
         }
 
@@ -55,10 +47,10 @@ public class WeatherAnimView extends View {
             ((WeatherDrawable) d).stopAnimation();
         }
 
-        super.setBackgroundDrawable(background);
+        super.setImageDrawable(drawable);
 
-        if (background != null && background instanceof WeatherDrawable && isShown()) {
-            ((WeatherDrawable) background).startAnimation();
+        if (drawable != null && drawable instanceof WeatherDrawable && isShown()) {
+            ((WeatherDrawable) drawable).startAnimation();
         }
     }
 
@@ -66,7 +58,7 @@ public class WeatherAnimView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        Drawable d = getBackground();
+        Drawable d = getDrawable();
         if (d != null && d instanceof WeatherDrawable) {
             ((WeatherDrawable) d).startAnimation();
         }
@@ -76,7 +68,7 @@ public class WeatherAnimView extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        Drawable d = getBackground();
+        Drawable d = getDrawable();
         if (d != null && d instanceof WeatherDrawable) {
             ((WeatherDrawable) d).stopAnimation();
         }

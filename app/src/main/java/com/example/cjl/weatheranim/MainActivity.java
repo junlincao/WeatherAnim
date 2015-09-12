@@ -1,12 +1,16 @@
 package com.example.cjl.weatheranim;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
-import com.mlog.weather.anim.WeatherAnimView;
+import com.mlog.weather.anim.drawable.CloudDrawable;
 import com.mlog.weather.anim.drawable.HailDrawable;
+import com.mlog.weather.anim.drawable.RainDrawable;
 import com.mlog.weather.anim.drawable.WeatherDrawable;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,10 +19,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        WeatherAnimView testView = (WeatherAnimView) findViewById(R.id.testView);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        WeatherDrawable drawable = new HailDrawable();
-        testView.setBackgroundDrawable(drawable);
+        AnimPagerAdapter mAdapter = new AnimPagerAdapter(getLayoutInflater());
+        mAdapter.updateData(generateData());
+
+        mViewPager.setAdapter(mAdapter);
+
+    }
+
+    private Map<String, WeatherDrawable> generateData() {
+        LinkedHashMap<String, WeatherDrawable> datas = new LinkedHashMap<>();
+
+        datas.put("冰雹", new HailDrawable());
+        datas.put("多云", new CloudDrawable());
+        datas.put("大雨", new RainDrawable(RainDrawable.RAIN_TYPE_HEAVY));
+        datas.put("小雨", new RainDrawable(RainDrawable.RAIN_TYPE_SMALL));
+
+        return datas;
     }
 
 }
