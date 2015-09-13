@@ -68,11 +68,12 @@ public class HailDrawable extends WeatherDrawable implements IWeatherItemCallbac
 
     @Override
     public void onAnimFinish(IWeatherItem item) {
+        if (!mIsRunning) {
+            return;
+        }
         if (item instanceof Hail) {
             Hail hail = getRandomHail((Hail) item, mHailRect, false);
-            if (mIsRunning) {
-                hail.start(SystemClock.elapsedRealtime());
-            }
+            hail.start(SystemClock.elapsedRealtime());
         }
     }
 }

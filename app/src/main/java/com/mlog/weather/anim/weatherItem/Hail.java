@@ -3,9 +3,6 @@ package com.mlog.weather.anim.weatherItem;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.SystemClock;
-
-import java.util.Random;
 
 /**
  * 冰雹
@@ -18,7 +15,7 @@ public class Hail extends SimpleWeatherItem {
     private static final int DROP_TIME = 800;
     // 落地后飞溅耗时
     private static final int SPLIT_TIME = 400;
-     //下落步骤中完全透明
+    //下落步骤中完全透明
     private static final float FULL_ALPHA_PROGRESS = 0.7f;
 
     @Override

@@ -147,16 +147,15 @@ public class RainDrawable extends WeatherDrawable implements IWeatherItemCallbac
 
     @Override
     public void onAnimFinish(IWeatherItem item) {
+        if (!mIsRunning) {
+            return;
+        }
         if (item instanceof RainLine) {
             RainLine rainLine = getRandomRainLine((RainLine) item, mRainRect, false);
-            if (mIsRunning) {
-                rainLine.start(SystemClock.elapsedRealtime());
-            }
+            rainLine.start(SystemClock.elapsedRealtime());
         } else if (item instanceof RainDrop) {
             RainDrop rainDrop = getRandomRainDrop((RainDrop) item, mRainRect, false);
-            if (mIsRunning) {
-                rainDrop.start(SystemClock.elapsedRealtime());
-            }
+            rainDrop.start(SystemClock.elapsedRealtime());
         }
     }
 }
