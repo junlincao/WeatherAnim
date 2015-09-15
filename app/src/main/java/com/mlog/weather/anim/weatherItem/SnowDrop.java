@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -22,13 +23,16 @@ public class SnowDrop extends SimpleWeatherItem {
     static final int ANIM_DURATION = 800;
     // 透明度100中间点
     static final int ALPHA_CENTER = 200;
-    private Bitmap mSnow;
+    private Drawable mSnow;
     int degree = 0;
+    boolean flag = false;
     Random random = new Random(System.currentTimeMillis());
-    public SnowDrop(Bitmap bitmap) {
-        mSnow = bitmap;
+
+    public SnowDrop(Drawable drawable) {
+        mSnow = drawable;
         mInterpolator = new AccelerateDecelerateInterpolator();
     }
+
     /**
      * 设置X轴位置偏移量
      *
@@ -37,6 +41,7 @@ public class SnowDrop extends SimpleWeatherItem {
     public void setXShift(int xShift) {
         this.mXShift = xShift;
     }
+
     @Override
     public void setCallback(IWeatherItemCallback callback) {
         super.setCallback(callback);
@@ -86,49 +91,24 @@ public class SnowDrop extends SimpleWeatherItem {
         if (t < ANIM_DURATION) {
             int alpha;
             if (t < ALPHA_CENTER) {
-                alpha = 255 * t / ALPHA_CENTER;
+                alpha = (int) (255f * t / ALPHA_CENTER);
             } else {
-                alpha = 255 - 255 * (t - ALPHA_CENTER) / (ANIM_DURATION - ALPHA_CENTER);
+                alpha = (int) (255f - 255f * (t - ALPHA_CENTER) / (ANIM_DURATION - ALPHA_CENTER));
             }
-            paint.setColor(Color.argb(alpha, 0, 0, 0));
-
+            mSnow.setAlpha(alpha);
             float progress = mInterpolator.getInterpolation((float) t / ANIM_DURATION);
-            float x = mBounds.centerX() ; //- mXShift * progress
+            float x = mBounds.centerX();
             float y = mBounds.top + mBounds.height() * progress;
-            degree += random.nextInt(5);
-            degree = 720 * 2 + degree;
-            Log.d("snow", "degree:" + degree);
-//            rotate(mSnow, degree)
-            canvas.drawBitmap(rotate(mSnow, degree), x, y, paint);
-//            canvas.drawCircle(x, y, mBounds.width() / 2, paint);
+
+            int hw = mSnow.getIntrinsicWidth() / 2;
+            int hh = mSnow.getIntrinsicHeight() / 2;
+            mSnow.setBounds((int) x - hw, (int) y - hh, (int) x + hw, (int) y + hh);
+            canvas.save();
+            canvas.rotate(120 * progress, x , y);
+            mSnow.draw(canvas);
+            canvas.restore();
         } else {
             stop();
         }
-    }
-
-    /**
-     * release data
-     */
-    public void release() {
-        mSnow.recycle();
-    }
-
-    public static Bitmap rotate(Bitmap b, int degrees) {
-        if (degrees != 0 && b != null) {
-            Matrix m = new Matrix();
-            m.setRotate(degrees,
-                    (float) b.getWidth() / 2, (float) b.getHeight() / 2);
-            try {
-                Bitmap b2 = Bitmap.createBitmap(
-                        b, 0, 0, b.getWidth(), b.getHeight(), m, true);
-                if (b != b2) {
-//                    b.recycle();  //Bitmap操作完应该显示的释放
-                    b = b2;
-                }
-            } catch (OutOfMemoryError e) {
-                Log.e("", e.toString());
-            }
-        }
-        return b;
     }
 }

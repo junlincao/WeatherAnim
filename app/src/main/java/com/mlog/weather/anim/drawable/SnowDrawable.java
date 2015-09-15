@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.mlog.weather.anim.weatherItem.Cloud;
 import com.mlog.weather.anim.weatherItem.IWeatherItem;
@@ -17,6 +19,7 @@ import com.mlog.weather.anim.weatherItem.SnowDrop;
 
 /**
  * Created by dongqi on 2015/9/13.
+ *
  * @since 2015.09.13
  */
 public class SnowDrawable extends WeatherDrawable implements IWeatherItemCallback {
@@ -27,10 +30,12 @@ public class SnowDrawable extends WeatherDrawable implements IWeatherItemCallbac
     // 延迟下落最大时间
     static final int RAIN_DELAY = 300;
     Random random = new Random(System.currentTimeMillis());
-    Bitmap[] mBitmap;
-    public SnowDrawable(Bitmap[] bitmap) {
-        mBitmap = bitmap;
+    Drawable[] mDrawables;
+
+    public SnowDrawable(Drawable[] drawables) {
+        mDrawables = drawables;
     }
+
     @Override
     void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect) {
         Cloud cloud = new Cloud();
@@ -56,15 +61,10 @@ public class SnowDrawable extends WeatherDrawable implements IWeatherItemCallbac
     SnowDrop getRandomSnowDrop(@Nullable SnowDrop rainDrop, Rect rect, boolean isFirst) {
         if (rainDrop == null) {
             int subIndex = random.nextInt(3);
-            rainDrop = new SnowDrop(mBitmap[subIndex]);
+            rainDrop = new SnowDrop(mDrawables[subIndex]);
         }
-//        else  {
-//            rainDrop.release();
-//            int subIndex = random.nextInt(3);
-//            rainDrop = new SnowDrop(mBitmap[subIndex]);
-//        }
         int hailWidth = (int) (27f / 190 * rect.width());
-        rainDrop.setDelay(random.nextInt(isFirst ? RAIN_DELAY : 1200));
+        rainDrop.setDelay(random.nextInt(isFirst ? 800 : 300));
         int x = rect.left + random.nextInt(rect.width() - hailWidth);
         rainDrop.setBounds(new Rect(x, rect.top, x + hailWidth, rect.bottom));
         rainDrop.setCallback(this);
@@ -82,7 +82,7 @@ public class SnowDrawable extends WeatherDrawable implements IWeatherItemCallbac
     }
 
     @Override
-        public void stopAnimation() {
+    public void stopAnimation() {
         super.stopAnimation();
     }
 
@@ -108,10 +108,11 @@ public class SnowDrawable extends WeatherDrawable implements IWeatherItemCallbac
 
     @Override
     public void onAnimFinish(IWeatherItem item) {
-        if (item instanceof SnowDrop) {
-            if (mIsRunning) {
-                item.start(SystemClock.elapsedRealtime());
-            }
+        Log.i("snow", "onAnimFinish");
+        if (!mIsRunning) {
+            return;
         }
+        item = getRandomSnowDrop((SnowDrop) item, mRainRect, false);
+        item.start(SystemClock.elapsedRealtime());
     }
 }
