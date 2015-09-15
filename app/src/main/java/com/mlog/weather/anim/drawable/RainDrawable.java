@@ -46,9 +46,9 @@ public class RainDrawable extends WeatherDrawable implements IWeatherItemCallbac
     public static final int RAIN_TYPE_SMALL = 1;
 
     // 雨滴状雨水数量
-    static final int RAIN_DROP_COUNT = 5;
+    static final int RAIN_DROP_COUNT = 4;
     // 连线雨水数量
-    static final int RAIN_LINE_COUNT = 5;
+    static final int RAIN_LINE_COUNT = 7;
     // 延迟下落最大时间
     static final int RAIN_DELAY = 300;
 
@@ -58,6 +58,7 @@ public class RainDrawable extends WeatherDrawable implements IWeatherItemCallbac
     int mRainType = RAIN_TYPE_HEAVY;
     int mXShift;
     int mLineMaxLen;
+    int mLineMinLen;
 
     /**
      * 设置雨大小类型
@@ -77,6 +78,7 @@ public class RainDrawable extends WeatherDrawable implements IWeatherItemCallbac
         int w = rect.width();
         mXShift = (int) (57f / 250 * w);
         mLineMaxLen = (int) (40f / 250 * w);
+        mLineMinLen = (int) (15f / 250 * w);
 
         int rw = (int) (rect.width() * 190f / 250);
         int left = (rect.width() - rw) / 2 + mXShift;
@@ -132,14 +134,15 @@ public class RainDrawable extends WeatherDrawable implements IWeatherItemCallbac
 
         int lineWidth = 1;
         if (mRainType == RAIN_TYPE_HEAVY) {
-            lineWidth = (int) (3f / 115 * rect.width());
+            lineWidth = (int) (1.8f / 115 * rect.width());
         }
+//        int lineWidth = (int) ((mRainType == RAIN_TYPE_HEAVY ? 3 : 1) / 115f * rect.width());
 
         rainLine.setDelay(random.nextInt(isFirst ? RAIN_DELAY : 800));
         int x = rect.left + random.nextInt(rect.width() - lineWidth);
         rainLine.setBounds(new Rect(x, rect.top, x + lineWidth, rect.bottom));
         rainLine.setXShift(mXShift);
-        rainLine.setMaxLen(mLineMaxLen);
+        rainLine.setLen(mLineMinLen, mLineMaxLen);
 
         rainLine.setCallback(this);
         return rainLine;

@@ -3,6 +3,9 @@ package com.mlog.weather.anim.weatherItem;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Interpolator;
 
 /**
  * 冰雹
@@ -17,6 +20,13 @@ public class Hail extends SimpleWeatherItem {
     private static final int SPLIT_TIME = 400;
     //下落步骤中完全透明
     private static final float FULL_ALPHA_PROGRESS = 0.7f;
+
+    private Interpolator mSplitInterpolator = new AccelerateDecelerateInterpolator();
+
+
+    public Hail() {
+        mInterpolator = new AccelerateInterpolator();
+    }
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
@@ -50,7 +60,15 @@ public class Hail extends SimpleWeatherItem {
     }
 
     private void drawSplit(Canvas canvas, Paint paint, float progress) {
-        //TODO
+        float ip = mSplitInterpolator.getInterpolation(progress);
+        int alpha = (int) (255 - 255 * ip);
+        int w = mBounds.width();
+
+        paint.setColor(Color.argb(alpha, 255, 255, 255));
+
+        canvas.drawCircle(mBounds.centerX() - w / 3.5f * ip, mBounds.bottom - w / 3f * ip, w / 20f, paint);
+        canvas.drawCircle(mBounds.centerX() + w / 4f * ip, mBounds.bottom - w / 2.8f * ip, w / 17f, paint);
+        canvas.drawCircle(mBounds.centerX(), mBounds.bottom - w / 2f * ip, w / 14f, paint);
     }
 
 }
