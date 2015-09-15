@@ -43,58 +43,58 @@ public class Cloud extends SimpleWeatherItem {
 
         //1
         CircleMsg cm = new CircleMsg();
-        cm.x = 54f / 250 * w;
-        cm.y = 105f / 250 * w;
+        cm.x = rect.left + 54f / 250 * w;
+        cm.y = rect.top + 105f / 250 * w;
         cm.r = 25f / 250 * w;
-        cm.alpha = 255;
+        cm.color = Color.WHITE;
         mCircleMsg.add(cm);
 
         //2
         cm = new CircleMsg();
-        cm.x = 204f / 250 * w;
-        cm.y = 115f / 250 * w;
+        cm.x = rect.left + 204f / 250 * w;
+        cm.y = rect.top + 115f / 250 * w;
         cm.r = 17.5f / 250 * w;
-        cm.alpha = 255;
+        cm.color = Color.WHITE;
         mCircleMsg.add(cm);
 
         //3
         cm = new CircleMsg();
-        cm.x = 178f / 250 * w;
-        cm.y = 98f / 250 * w;
+        cm.x = rect.left + 178f / 250 * w;
+        cm.y = rect.top + 98f / 250 * w;
         cm.r = 35f / 250 * w;
-        cm.alpha = 204;
+        cm.color = 0xccffffff;
         mCircleMsg.add(cm);
 
         //4
         cm = new CircleMsg();
-        cm.x = 92f / 250 * w;
-        cm.y = 90f / 250 * w;
+        cm.x = rect.left + 92f / 250 * w;
+        cm.y = rect.top + 90f / 250 * w;
         cm.r = 42.5f / 250 * w;
-        cm.alpha = 204;
+        cm.color = 0xccffffff;
         mCircleMsg.add(cm);
 
         //5
         cm = new CircleMsg();
-        cm.x = 142f / 250 * w;
-        cm.y = 104f / 250 * w;
+        cm.x = rect.left + 142f / 250 * w;
+        cm.y = rect.top + 104f / 250 * w;
         cm.r = 28.5f / 250 * w;
-        cm.alpha = 255;
+        cm.color = Color.WHITE;
         mCircleMsg.add(cm);
 
         //6
         cm = new CircleMsg();
-        cm.x = 152f / 250 * w;
-        cm.y = 76f / 250 * w;
+        cm.x = rect.left + 152f / 250 * w;
+        cm.y = rect.top + 76f / 250 * w;
         cm.r = 38f / 250 * w;
-        cm.alpha = 204;
+        cm.color = 0xccffffff;
         mCircleMsg.add(cm);
 
         //7
         cm = new CircleMsg();
-        cm.x = 138f / 250 * w;
-        cm.y = 62f / 250 * w;
+        cm.x = rect.left + 138f / 250 * w;
+        cm.y = rect.top + 62f / 250 * w;
         cm.r = 45f / 250 * w;
-        cm.alpha = 153;
+        cm.color = 0x99ffffff;
         mCircleMsg.add(cm);
     }
 
@@ -110,13 +110,13 @@ public class Cloud extends SimpleWeatherItem {
             float delayTime = 100 * i;
 
             if (t < delayTime) {
-                paint.setColor(Color.argb(cm.alpha, 255, 255, 255));
+                paint.setColor(cm.color);
                 canvas.drawCircle(cm.x, cm.y, cm.r, paint);
             } else if (t < MOVE_DURATION + delayTime) {
                 float deltaY = moveDistance * mInterpolator.getInterpolation((t - delayTime) / MOVE_DURATION);
                 float y = cm.y - deltaY;
 
-                paint.setColor(Color.argb(cm.alpha, 255, 255, 255));
+                paint.setColor(cm.color);
                 canvas.drawCircle(cm.x, y, cm.r, paint);
             } else if (t < MOVE_DURATION * 2 + delayTime) {
 //                float deltaY = moveDistance * mInterpolator.getInterpolation((MOVE_DURATION * 2 + delayTime - t) / MOVE_DURATION);
@@ -124,10 +124,10 @@ public class Cloud extends SimpleWeatherItem {
                 float deltaY = moveDistance * mInterpolator.getInterpolation((t - MOVE_DURATION - delayTime) / MOVE_DURATION);
                 float y = cm.y - moveDistance + deltaY;
 
-                paint.setColor(Color.argb(cm.alpha, 255, 255, 255));
+                paint.setColor(cm.color);
                 canvas.drawCircle(cm.x, y, cm.r, paint);
             } else {
-                paint.setColor(Color.argb(cm.alpha, 255, 255, 255));
+                paint.setColor(cm.color);
                 canvas.drawCircle(cm.x, cm.y, cm.r, paint);
             }
         }
@@ -139,7 +139,7 @@ public class Cloud extends SimpleWeatherItem {
         float x;
         float y;
         float r;
-        int alpha;
+        int color;
 
         @Override
         public String toString() {
@@ -147,7 +147,7 @@ public class Cloud extends SimpleWeatherItem {
                     "x=" + x +
                     ", y=" + y +
                     ", r=" + r +
-                    ", alpha=" + alpha +
+                    ", color=" + color +
                     '}';
         }
     }
