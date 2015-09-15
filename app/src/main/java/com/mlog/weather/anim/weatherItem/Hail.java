@@ -63,12 +63,13 @@ public class Hail extends SimpleWeatherItem {
         float ip = mSplitInterpolator.getInterpolation(progress);
         int alpha = (int) (255 - 255 * ip);
         int w = mBounds.width();
+        float bottom = mBounds.bottom - w / 10f;
 
         paint.setColor(Color.argb(alpha, 255, 255, 255));
 
-        canvas.drawCircle(mBounds.centerX() - w / 3.5f * ip, mBounds.bottom - w / 3f * ip, w / 20f, paint);
-        canvas.drawCircle(mBounds.centerX() + w / 4f * ip, mBounds.bottom - w / 2.8f * ip, w / 17f, paint);
-        canvas.drawCircle(mBounds.centerX(), mBounds.bottom - w / 2f * ip, w / 14f, paint);
+        canvas.drawCircle(mBounds.centerX() - w / 3.5f * ip, bottom - w / 3f * ip, w / 20f, paint);
+        canvas.drawCircle(mBounds.centerX() + w / 4f * ip, bottom - w / 2.8f * ip, w / 17f, paint);
+        canvas.drawCircle(mBounds.centerX(), bottom - w / 2f * ip, w / 14f, paint);
     }
 
 }

@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 
@@ -101,15 +102,20 @@ public class RainLine extends SimpleWeatherItem {
             float p1y = (float) (p2y + len * Math.sin(angle));
 
             paint.setColor(Color.argb(alpha, 255, 255, 255));
-            canvas.drawLine(p1x, p1y, p2x, p2y, paint);
+            canvas.drawLine(p1x, p1y, p2x, p2y, paint); //TODO 应该旋转画布画圆角矩形
         }
         if (t > EXPAND_START) {
             float pbx = mBounds.centerX() - mXShift;
-            float pby = mBounds.bottom - mBounds.width() / 2f - 1;
+//            float pby = mBounds.bottom - mBounds.width() / 2f - 1;
             int alpha = t < EXPAND_ALPHA_START ? 255 : (int) (255 - 255f * (t - EXPAND_ALPHA_START) / (ANIM_DURATION - EXPAND_ALPHA_START));
             float len = mMaxLen * mExpandInterpolator.getInterpolation((t - EXPAND_START) * 1f / (ANIM_DURATION - EXPAND_START));
             paint.setColor(Color.argb(alpha, 255, 255, 255));
-            canvas.drawLine(pbx - len / 2, pby, pbx + len / 2, pby, paint);
+//            canvas.drawLine(pbx - len / 2, pby, pbx + len / 2, pby, paint);
+
+            tmpRect.set(pbx - len / 2, mBounds.bottom - mBounds.width(), pbx + len / 2, mBounds.bottom);
+            canvas.drawRoundRect(tmpRect, mBounds.width() / 2, mBounds.width() / 2, paint);
         }
     }
+
+    RectF tmpRect = new RectF();
 }
