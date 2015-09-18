@@ -85,7 +85,7 @@ public class Sun extends SimpleWeatherItem {
         mD1.setBounds(centerX - hD1W, centerY - hD1W, centerX + hD1W, centerY + hD1W);
 
         centerCircleR = 46f / 250 * mBounds.width();
-        outerCircleR = 60f / 250 * mBounds.width();
+        outerCircleR = 58f / 250 * mBounds.width();
         waveCircleR = 112.5f / 250 * mBounds.width();
     }
 

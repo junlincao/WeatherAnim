@@ -2,7 +2,9 @@ package com.mlog.weather.anim.drawable;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
+import com.example.cjl.weatheranim.R;
 import com.mlog.weather.anim.weatherItem.Cloud;
 import com.mlog.weather.anim.weatherItem.IWeatherItem;
 import com.mlog.weather.anim.weatherItem.Sun;
@@ -15,10 +17,17 @@ import java.util.List;
  * @author CJL
  * @since 2015-09-15
  */
-public class CloudlyDrawable extends SunDrawable {
+public class CloudlyDrawable extends WeatherDrawable {
+
+
+    Drawable mD1;
+    Drawable mD2;
+    Drawable mD3;
 
     public CloudlyDrawable(Context context) {
-        super(context);
+        mD1 = context.getResources().getDrawable(R.drawable.cloudy_sun_1);
+        mD2 = context.getResources().getDrawable(R.drawable.cloudy_sun_1);
+        mD3 = context.getResources().getDrawable(R.drawable.cloudy_sun_2);
     }
 
     @Override

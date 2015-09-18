@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 /**
@@ -21,7 +22,7 @@ public class Hail extends SimpleWeatherItem {
     //下落步骤中完全透明
     private static final float FULL_ALPHA_PROGRESS = 0.7f;
 
-    private Interpolator mSplitInterpolator = new AccelerateDecelerateInterpolator();
+    private Interpolator mSplitInterpolator = new DecelerateInterpolator();
 
 
     public Hail() {

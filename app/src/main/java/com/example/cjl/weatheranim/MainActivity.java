@@ -8,6 +8,7 @@ import com.mlog.weather.anim.drawable.CloudDrawable;
 import com.mlog.weather.anim.drawable.CloudlyDrawable;
 import com.mlog.weather.anim.drawable.FreezingRainDrawable;
 import com.mlog.weather.anim.drawable.HailDrawable;
+import com.mlog.weather.anim.drawable.MoonDrawable;
 import com.mlog.weather.anim.drawable.RainDrawable;
 import com.mlog.weather.anim.drawable.SnowDrawable;
 import com.mlog.weather.anim.drawable.SunDrawable;
@@ -35,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, WeatherDrawable> generateData() {
         LinkedHashMap<String, WeatherDrawable> datas = new LinkedHashMap<>();
 
+        datas.put("晴夜晚", new MoonDrawable(this));
         datas.put("雪", new SnowDrawable(this));
-
         datas.put("多云", new CloudlyDrawable(this));
         datas.put("晴", new SunDrawable(this));
         datas.put("冻雨", new FreezingRainDrawable());
