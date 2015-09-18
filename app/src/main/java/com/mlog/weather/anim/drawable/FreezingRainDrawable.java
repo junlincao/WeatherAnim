@@ -19,107 +19,64 @@ import java.util.Random;
  * @author CJL
  * @since 2015-09-15
  */
-public class FreezingRainDrawable extends WeatherDrawable implements IWeatherItemCallback {
-
-    // 雨滴状雨水数量
-    static final int RAIN_DROP_COUNT = 4;
-    // 连线雨水数量
-    static final int RAIN_LINE_COUNT = 7;
-    // 延迟下落最大时间
-    static final int RAIN_DELAY = 300;
-
-    Random random = new Random(System.currentTimeMillis());
-
-    Rect mRainRect;
-    int mXShift;
-    int mLineMaxLen;
-    int mLineMinLen;
+public class FreezingRainDrawable extends WeatherDrawable {
 
     @Override
     void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect) {
         Cloud cloud = new Cloud();
-        cloud.setBounds(rect);
+        cloud.setBounds(rect.left, rect.top, rect.right, rect.bottom);
         weatherItems.add(cloud);
-
-        int w = rect.width();
-//        mXShift = (int) (57f / 250 * w);
-        mXShift = 0;
-        mLineMaxLen = (int) (40f / 250 * w);
-        mLineMinLen = (int) (15f / 250 * w);
-
-        int rw = (int) (rect.width() * 190f / 250);
-        int left = (rect.width() - rw) / 2 + mXShift;
-        int top = (int) (rect.width() * 120f / 250);
-        mRainRect = new Rect(left, top, left + rw - mXShift, rect.bottom);
-
-        for (int i = 0; i < RAIN_DROP_COUNT; i++) {
-            weatherItems.add(getRandomRainDrop(null, mRainRect, true));
-        }
-        for (int i = 0; i < RAIN_LINE_COUNT; i++) {
-            weatherItems.add(getRandomRainLine(null, mRainRect, true));
-        }
-    }
-
-
-    /**
-     * 随机生成雨滴状雨水
-     *
-     * @param rainDrop 雨滴状雨水
-     * @param rect     雨滴显示区域
-     * @return 雨滴状雨水对象
-     */
-    FreezingRainDrop getRandomRainDrop(@Nullable FreezingRainDrop rainDrop, Rect rect, boolean isFirst) {
-        if (rainDrop == null) {
-            rainDrop = new FreezingRainDrop();
-        }
-
-        int dropWidth = (int) (2.23f / 115 * rect.width());
-
-        rainDrop.setDelay(random.nextInt(isFirst ? RAIN_DELAY : 800));
-        int x = rect.left + random.nextInt(rect.width() - dropWidth);
-        rainDrop.setBounds(new Rect(x, rect.top, x + dropWidth, rect.bottom));
-//        rainDrop.setXShift(mXShift);
-
-        rainDrop.setCallback(this);
-        return rainDrop;
-    }
-
-
-    /**
-     * 随机生成连线状雨水
-     *
-     * @param rainLine 雨滴状雨水
-     * @param rect     雨滴显示区域
-     * @return 雨滴状雨水对象
-     */
-    RainLine getRandomRainLine(@Nullable RainLine rainLine, Rect rect, boolean isFirst) {
-        if (rainLine == null) {
-            rainLine = new RainLine();
-        }
-
-        int lineWidth = (int) (1f / 115 * rect.width());
-
-        rainLine.setDelay(random.nextInt(isFirst ? RAIN_DELAY : 800));
-        int x = rect.left + random.nextInt(rect.width() - lineWidth);
-        rainLine.setBounds(new Rect(x, rect.top, x + lineWidth, rect.bottom));
-        rainLine.setXShift(mXShift);
-        rainLine.setLen(mLineMinLen, mLineMaxLen);
-
-        rainLine.setCallback(this);
-        return rainLine;
     }
 
     @Override
-    public void onAnimFinish(IWeatherItem item) {
-        if (!mIsRunning) {
-            return;
-        }
-        if (item instanceof RainLine) {
-            RainLine rainLine = getRandomRainLine((RainLine) item, mRainRect, false);
-            rainLine.start(SystemClock.elapsedRealtime());
-        } else if (item instanceof FreezingRainDrop) {
-            FreezingRainDrop rainDrop = getRandomRainDrop((FreezingRainDrop) item, mRainRect, false);
-            rainDrop.start(SystemClock.elapsedRealtime());
-        }
+    protected void addRandomItem(List<IWeatherRandomItem> randomItems, Rect rect) {
+        int w = rect.width();
+        final int mLineMaxLen = (int) (40f / 250 * w);
+        final int mLineMinLen = (int) (15f / 250 * w);
+
+        int rw = (int) (rect.width() * 190f / 250);
+        int left = (rect.width() - rw) / 2;
+        int top = (int) (rect.width() * 120f / 250);
+        final Rect mRainRect = new Rect(left, top, left + rw, rect.bottom);
+        final int mDropWidth = (int) (2.23f / 115 * rect.width());
+        final int mLineWidth = (int) (1f / 115 * rect.width());
+        final Random random = new Random(System.currentTimeMillis());
+
+        IWeatherRandomItem rainDrop = new IWeatherRandomItem() {
+            @Override
+            public int getInterval() {
+                return 350;
+            }
+
+            @Override
+            public IWeatherItem getRandomWeatherItem() {
+                FreezingRainDrop rainDrop = new FreezingRainDrop();
+                int x = mRainRect.left + random.nextInt(mRainRect.width() - mDropWidth);
+                rainDrop.setBounds(x, mRainRect.top, x + mDropWidth, mRainRect.bottom);
+
+                return rainDrop;
+            }
+        };
+        randomItems.add(rainDrop);
+
+
+        IWeatherRandomItem rainLine = new IWeatherRandomItem() {
+            @Override
+            public int getInterval() {
+                return 200;
+            }
+
+            @Override
+            public IWeatherItem getRandomWeatherItem() {
+                RainLine rainLine = new RainLine();
+
+                int x = mRainRect.left + random.nextInt(mRainRect.width() - mLineWidth);
+                rainLine.setBounds(x, mRainRect.top, x + mLineWidth, mRainRect.bottom);
+                rainLine.setLen(mLineMinLen, mLineMaxLen);
+
+                return rainLine;
+            }
+        };
+        randomItems.add(rainLine);
     }
 }

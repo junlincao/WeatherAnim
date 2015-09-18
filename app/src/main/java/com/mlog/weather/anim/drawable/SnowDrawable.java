@@ -1,118 +1,85 @@
 package com.mlog.weather.anim.drawable;
 
-import java.util.List;
-import java.util.Random;
-
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
+import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
+import com.example.cjl.weatheranim.R;
 import com.mlog.weather.anim.weatherItem.Cloud;
+import com.mlog.weather.anim.weatherItem.FreezingRainDrop;
 import com.mlog.weather.anim.weatherItem.IWeatherItem;
-import com.mlog.weather.anim.weatherItem.IWeatherItemCallback;
 import com.mlog.weather.anim.weatherItem.SnowDrop;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by dongqi on 2015/9/13.
  *
  * @since 2015.09.13
  */
-public class SnowDrawable extends WeatherDrawable implements IWeatherItemCallback {
-    Rect mRainRect;
-    int SNOW_COUNT = 10;
-    int mXShift;
-    int mLineMaxLen;
-    // 延迟下落最大时间
-    static final int RAIN_DELAY = 300;
-    Random random = new Random(System.currentTimeMillis());
-    Drawable[] mDrawables;
+public class SnowDrawable extends WeatherDrawable {
+    Drawable mDrawable;
 
-    public SnowDrawable(Drawable[] drawables) {
-        mDrawables = drawables;
+    public SnowDrawable(Context context) {
+        mDrawable = context.getResources().getDrawable(R.drawable.snow);
     }
 
     @Override
     void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect) {
         Cloud cloud = new Cloud();
-        cloud.setBounds(rect);
+        cloud.setBounds(rect.left, rect.top, rect.right, rect.bottom);
         weatherItems.add(cloud);
-        //添加雪花
+    }
+
+    @Override
+    protected void addRandomItem(List<IWeatherRandomItem> randomItems, Rect rect) {
+        final Random random = new Random(System.currentTimeMillis());
         int hw = (int) (rect.width() * 190f / 250);
         int left = (rect.width() - hw) / 2;
         int top = (int) (rect.width() * 120f / 250);
-        mRainRect = new Rect(left, top, left + hw, rect.bottom);
-        for (int i = 0; i < SNOW_COUNT; i++) {
-            weatherItems.add(getRandomSnowDrop(null, mRainRect, true));
-        }
-    }
+        final Rect snowRect = new Rect(left, top, left + hw, rect.bottom);
+        final int snowWidth = (int) (15f / 190 * snowRect.width());
+        final Interpolator mFreezingInterpolator = new LinearInterpolator();
+        final int freezingWidth = (int) (4.46f / 190 * snowRect.width());
 
-    /**
-     * 随机生成雨滴状雨水
-     *
-     * @param rainDrop 雨滴状雨水
-     * @param rect     雨滴显示区域
-     * @return 雨滴状雨水对象
-     */
-    SnowDrop getRandomSnowDrop(@Nullable SnowDrop rainDrop, Rect rect, boolean isFirst) {
-        if (rainDrop == null) {
-            int subIndex = random.nextInt(3);
-            rainDrop = new SnowDrop(mDrawables[subIndex]);
-        }
-        int hailWidth = (int) (27f / 190 * rect.width());
-        rainDrop.setDelay(random.nextInt(isFirst ? 800 : 300));
-        int x = rect.left + random.nextInt(rect.width() - hailWidth);
-        rainDrop.setBounds(new Rect(x, rect.top, x + hailWidth, rect.bottom));
-        rainDrop.setCallback(this);
-        return rainDrop;
-    }
+        IWeatherRandomItem snow = new IWeatherRandomItem() {
+            @Override
+            public int getInterval() {
+                return 270;
+            }
 
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-    }
+            @Override
+            public IWeatherItem getRandomWeatherItem() {
+                SnowDrop snow = new SnowDrop(mDrawable);
+                int x = snowRect.left + random.nextInt(snowRect.width() - snowWidth);
+                snow.setBounds(x, snowRect.top, x + snowWidth, snowRect.bottom);
 
-    @Override
-    public void startAnimation() {
-        super.startAnimation();
-    }
+                return snow;
+            }
+        };
 
-    @Override
-    public void stopAnimation() {
-        super.stopAnimation();
-    }
+        IWeatherRandomItem freezing = new IWeatherRandomItem() {
+            @Override
+            public int getInterval() {
+                return 350;
+            }
 
-    @Override
-    public void setAlpha(int alpha) {
-        super.setAlpha(alpha);
-    }
+            @Override
+            public IWeatherItem getRandomWeatherItem() {
+                FreezingRainDrop frd = new FreezingRainDrop();
+                int left = snowRect.left + random.nextInt(snowRect.width() - freezingWidth);
+                frd.setBounds(left, snowRect.top, left + freezingWidth, snowRect.bottom);
+                frd.setAlphaCenter(1700);
+                frd.setDropTime(2000);
+                frd.setInterpolator(mFreezingInterpolator);
 
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-        super.setColorFilter(colorFilter);
-    }
-
-    @Override
-    public int getOpacity() {
-        return super.getOpacity();
-    }
-
-    @Override
-    protected List<IWeatherItem> getWeatherItems() {
-        return super.getWeatherItems();
-    }
-
-    @Override
-    public void onAnimFinish(IWeatherItem item) {
-        Log.i("snow", "onAnimFinish");
-        if (!mIsRunning) {
-            return;
-        }
-        item = getRandomSnowDrop((SnowDrop) item, mRainRect, false);
-        item.start(SystemClock.elapsedRealtime());
+                return frd;
+            }
+        };
+        randomItems.add(snow);
+        randomItems.add(freezing);
     }
 }

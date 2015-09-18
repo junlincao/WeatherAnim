@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
 
@@ -28,71 +28,92 @@ public class Cloud extends SimpleWeatherItem {
     ArrayList<CircleMsg> mCircleMsg = new ArrayList<>(7);
 
     public Cloud() {
-        mInterpolator = new DecelerateInterpolator(3);
+        mInterpolator = new MCloudInterpolator(2f);
+    }
+
+    // 云加速计算器   先加速，再减速，按时间轴对称
+    private static class MCloudInterpolator implements Interpolator {
+        float mFactor;
+
+        MCloudInterpolator(float factor) {
+            this.mFactor = factor * 2;
+        }
+
+        @Override
+        public float getInterpolation(float input) {
+            float result;
+            if (input <= 0.5f) {
+                result = (float) Math.pow(input / 0.5, mFactor) / 2;
+            } else {
+                input = 1 - input;
+                result = 1 - (float) Math.pow(input / 0.5, mFactor) / 2;
+            }
+            return result;
+        }
     }
 
     @Override
-    public void setBounds(Rect rect) {
-        super.setBounds(rect);
+    public void setBounds(int left, int top, int right, int bottom) {
+        super.setBounds(left, top, right, bottom);
 
         mCircleMsg.clear();
 
         // 设置各个圆圈半径与位置  按宽度适应
-        int w = rect.width();
+        int w = mBounds.width();
         moveDistance = 9f / 250 * w;
 
         //1
         CircleMsg cm = new CircleMsg();
-        cm.x = rect.left + 54f / 250 * w;
-        cm.y = rect.top + 105f / 250 * w;
+        cm.x = left + 54f / 250 * w;
+        cm.y = top + 105f / 250 * w;
         cm.r = 25f / 250 * w;
         cm.color = Color.WHITE;
         mCircleMsg.add(cm);
 
         //2
         cm = new CircleMsg();
-        cm.x = rect.left + 204f / 250 * w;
-        cm.y = rect.top + 115f / 250 * w;
+        cm.x = left + 204f / 250 * w;
+        cm.y = top + 115f / 250 * w;
         cm.r = 17.5f / 250 * w;
         cm.color = Color.WHITE;
         mCircleMsg.add(cm);
 
         //3
         cm = new CircleMsg();
-        cm.x = rect.left + 178f / 250 * w;
-        cm.y = rect.top + 98f / 250 * w;
+        cm.x = left + 178f / 250 * w;
+        cm.y = top + 98f / 250 * w;
         cm.r = 35f / 250 * w;
         cm.color = 0xccffffff;
         mCircleMsg.add(cm);
 
         //4
         cm = new CircleMsg();
-        cm.x = rect.left + 92f / 250 * w;
-        cm.y = rect.top + 90f / 250 * w;
+        cm.x = left + 92f / 250 * w;
+        cm.y = top + 90f / 250 * w;
         cm.r = 42.5f / 250 * w;
         cm.color = 0xccffffff;
         mCircleMsg.add(cm);
 
         //5
         cm = new CircleMsg();
-        cm.x = rect.left + 142f / 250 * w;
-        cm.y = rect.top + 104f / 250 * w;
+        cm.x = left + 142f / 250 * w;
+        cm.y = top + 104f / 250 * w;
         cm.r = 28.5f / 250 * w;
         cm.color = Color.WHITE;
         mCircleMsg.add(cm);
 
         //6
         cm = new CircleMsg();
-        cm.x = rect.left + 152f / 250 * w;
-        cm.y = rect.top + 76f / 250 * w;
+        cm.x = left + 152f / 250 * w;
+        cm.y = top + 76f / 250 * w;
         cm.r = 38f / 250 * w;
         cm.color = 0xccffffff;
         mCircleMsg.add(cm);
 
         //7
         cm = new CircleMsg();
-        cm.x = rect.left + 138f / 250 * w;
-        cm.y = rect.top + 62f / 250 * w;
+        cm.x = left + 138f / 250 * w;
+        cm.y = top + 62f / 250 * w;
         cm.r = 45f / 250 * w;
         cm.color = 0x99ffffff;
         mCircleMsg.add(cm);

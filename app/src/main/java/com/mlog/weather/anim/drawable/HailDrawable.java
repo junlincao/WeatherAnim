@@ -18,62 +18,42 @@ import java.util.Random;
  * @author CJL
  * @since 2015-09-11
  */
-public class HailDrawable extends WeatherDrawable implements IWeatherItemCallback {
-    // 冰雹数量
-    static final int HAIL_COUNT = 10;
-    // 冰雹延迟下落最大时间
-    static final int HAIL_DELAY = 300;
-
-    Random random = new Random(System.currentTimeMillis());
-
-    Rect mHailRect;
-
+public class HailDrawable extends WeatherDrawable {
     @Override
     void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect) {
         Cloud cloud = new Cloud();
-        cloud.setBounds(rect);
+        cloud.setBounds(rect.left, rect.top, rect.right, rect.bottom);
         weatherItems.add(cloud);
+    }
+
+    @Override
+    protected void addRandomItem(List<IWeatherRandomItem> randomItems, Rect rect) {
+
+        final Random random = new Random(System.currentTimeMillis());
 
         int hw = (int) (rect.width() * 190f / 250);
         int left = (rect.width() - hw) / 2;
         int top = (int) (rect.width() * 120f / 250);
-        mHailRect = new Rect(left, top, left + hw, rect.bottom);
+        final Rect mHailRect = new Rect(left, top, left + hw, rect.bottom);
 
-        for (int i = 0; i < HAIL_COUNT; i++) {
-            weatherItems.add(getRandomHail(null, mHailRect, true));
-        }
-    }
 
-    /**
-     * 随机生成冰雹
-     *
-     * @param hail 冰雹对象
-     * @param rect 冰雹显示区域
-     * @return 冰雹对象
-     */
-    Hail getRandomHail(@Nullable Hail hail, Rect rect, boolean isFirst) {
-        if (hail == null) {
-            hail = new Hail();
-        }
+        IWeatherRandomItem iri = new IWeatherRandomItem() {
+            @Override
+            public int getInterval() {
+                return 200;
+            }
 
-        int hailWidth = (int) (28f / 190 * rect.width());
+            @Override
+            public IWeatherItem getRandomWeatherItem() {
+                Hail hail = new Hail();
+                int hailWidth = (int) (28f / 190 * mHailRect.width());
+                int x = mHailRect.left + random.nextInt(mHailRect.width() - hailWidth);
+                hail.setBounds(x, mHailRect.top, x + hailWidth, mHailRect.bottom);
 
-        hail.setDelay(random.nextInt(isFirst ? HAIL_DELAY : 1200));
-        int x = rect.left + random.nextInt(rect.width() - hailWidth);
-        hail.setBounds(new Rect(x, rect.top, x + hailWidth, rect.bottom));
+                return hail;
+            }
+        };
 
-        hail.setCallback(this);
-        return hail;
-    }
-
-    @Override
-    public void onAnimFinish(IWeatherItem item) {
-        if (!mIsRunning) {
-            return;
-        }
-        if (item instanceof Hail) {
-            Hail hail = getRandomHail((Hail) item, mHailRect, false);
-            hail.start(SystemClock.elapsedRealtime());
-        }
+        randomItems.add(iri);
     }
 }

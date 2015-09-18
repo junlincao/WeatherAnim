@@ -15,12 +15,19 @@ public class FreezingRainDrop extends SimpleWeatherItem {
     // 下落耗时
     private static final int DROP_TIME = 800;
 
-    //下落步骤中完全透明
-    private static final float FULL_ALPHA_PROGRESS = 0.7f;
-
+    private int mDropTime = DROP_TIME;
+    private int mAlphaCenter = 600;
 
     public FreezingRainDrop() {
         mInterpolator = new AccelerateInterpolator();
+    }
+
+    public void setDropTime(int dropTime) {
+        mDropTime = dropTime;
+    }
+
+    public void setAlphaCenter(int centerTime) {
+        this.mAlphaCenter = centerTime;
     }
 
     @Override
@@ -30,18 +37,14 @@ public class FreezingRainDrop extends SimpleWeatherItem {
         }
 
         int t = (int) (time - mStartTime);
-        if (t <= mDelayTime) {
-            return;
-        }
-        t -= mDelayTime;
-        if (t > DROP_TIME) {
+        if (t > mDropTime) {
             stop();
             return;
         }
 
-        float progress = t * 1f / DROP_TIME;
+        float progress = t * 1f / mDropTime;
 
-        int alpha = progress >= FULL_ALPHA_PROGRESS ? 255 : (int) (progress / FULL_ALPHA_PROGRESS * 255);
+        int alpha = progress <= mAlphaCenter ? 255 : (int) (255 - 255f * (t - mAlphaCenter) / (mDropTime - mAlphaCenter));
         paint.setColor(Color.argb(alpha, 255, 255, 255));
         float y = mBounds.top + mBounds.height() * mInterpolator.getInterpolation(progress);
         float x = mBounds.centerX();

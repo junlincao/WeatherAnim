@@ -31,7 +31,7 @@ public class SunDrawable extends WeatherDrawable {
     @Override
     void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect) {
         Sun sun = new Sun(mD1, mD2, mD3);
-        sun.setBounds(rect);
+        sun.setBounds(rect.left, rect.top, rect.right, rect.bottom);
         sun.setShowWave(true);
         weatherItems.add(sun);
     }

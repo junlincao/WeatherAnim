@@ -1,8 +1,5 @@
 package com.example.cjl.weatheranim;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -38,10 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, WeatherDrawable> generateData() {
         LinkedHashMap<String, WeatherDrawable> datas = new LinkedHashMap<>();
 
-        Drawable[] bitmaps = { getResources().getDrawable(R.drawable.snow),
-                getResources().getDrawable(R.drawable.snow_2x) ,
-                getResources().getDrawable(R.drawable.snow_2x)};
-        datas.put("雪", new SnowDrawable(bitmaps));
+        datas.put("雪", new SnowDrawable(this));
 
         datas.put("多云", new CloudlyDrawable(this));
         datas.put("晴", new SunDrawable(this));

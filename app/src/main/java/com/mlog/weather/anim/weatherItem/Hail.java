@@ -35,10 +35,6 @@ public class Hail extends SimpleWeatherItem {
         }
 
         int t = (int) (time - mStartTime);
-        if (t <= mDelayTime) {
-            return;
-        }
-        t -= mDelayTime;
 
         if (t < DROP_TIME) {
             drawDrop(canvas, paint, t * 1f / DROP_TIME);
@@ -56,7 +52,7 @@ public class Hail extends SimpleWeatherItem {
         float y = mBounds.top + mBounds.height() * mInterpolator.getInterpolation(progress);
         float x = mBounds.centerX();
 
-        canvas.drawCircle(x, y, mBounds.width() / 10, paint);
+        canvas.drawCircle(x, y, mBounds.width() / 8, paint);
     }
 
     private void drawSplit(Canvas canvas, Paint paint, float progress) {

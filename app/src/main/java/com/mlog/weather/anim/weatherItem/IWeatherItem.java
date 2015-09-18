@@ -21,23 +21,14 @@ public interface IWeatherItem {
     @Retention(RetentionPolicy.SOURCE)
     @interface WeatherItemStatus {
     }
-//    @IntDef({MODE_REPEAT, MODE_ONE_SHOT})
-//    @Retention(RetentionPolicy.SOURCE)
-//    @interface WeatherItemRepeatMode {
-//    }
 
     int STATUS_NOT_START = 0;
     int STATUS_RUNNING = 1;
     int STATUS_ENDED = 2;
 
-
-//    int MODE_REPEAT = 0;
-//    int MODE_ONE_SHOT = 1;
-
-
     void setCallback(IWeatherItemCallback callback);
 
-    void setBounds(Rect rect);
+    void setBounds(int left, int top, int right, int bottom);
 
 //    void reset();
 
@@ -51,8 +42,4 @@ public interface IWeatherItem {
     int getStatus();
 
     void setInterpolator(Interpolator intercepter);
-
-    void setDelay(int delay);
-
-//    void setRepeatMode(@WeatherItemRepeatMode int repeatMode);
 }

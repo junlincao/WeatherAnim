@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 /**
@@ -61,15 +62,15 @@ public class RainLine extends SimpleWeatherItem {
     }
 
     @Override
-    public void setBounds(Rect rect) {
-        super.setBounds(rect);
+    public void setBounds(int left, int top, int right, int bottom) {
+        super.setBounds(left, top, right, bottom);
 
         int h = mBounds.height();
         dropLen = (float) Math.sqrt(mXShift * mXShift + h * h);
         angle = Math.atan2(h, mXShift);
     }
 
-    Interpolator mExpandInterpolator = new AccelerateInterpolator();
+    Interpolator mExpandInterpolator = new DecelerateInterpolator(0.8f);
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
@@ -78,10 +79,6 @@ public class RainLine extends SimpleWeatherItem {
         }
 
         int t = (int) (time - mStartTime);
-        if (t <= mDelayTime) {
-            return;
-        }
-        t -= mDelayTime;
 
         int w = mBounds.width();
         paint.setStrokeWidth(w);

@@ -17,7 +17,7 @@ public class CloudDrawable extends WeatherDrawable {
     @Override
     void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect) {
         Cloud cloud = new Cloud();
-        cloud.setBounds(rect);
+        cloud.setBounds(rect.left, rect.top, rect.right, rect.bottom);
 
         weatherItems.add(cloud);
     }

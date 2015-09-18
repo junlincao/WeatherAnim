@@ -12,8 +12,6 @@ import android.view.animation.Interpolator;
  */
 public abstract class SimpleWeatherItem implements IWeatherItem {
 
-    protected int mDelayTime = 0;
-
     protected IWeatherItemCallback mCallBack;
 
     protected Rect mBounds = new Rect();
@@ -27,8 +25,6 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
 
     protected int mStatus = STATUS_NOT_START;
 
-//    protected int mRepeatMode = MODE_REPEAT;
-
 
     @Override
     public void setCallback(IWeatherItemCallback callback) {
@@ -36,8 +32,8 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
     }
 
     @Override
-    public void setBounds(Rect rect) {
-        mBounds.set(rect);
+    public void setBounds(int left, int top, int right, int bottom) {
+        mBounds.set(left, top, right, bottom);
     }
 
     @Override
@@ -67,14 +63,4 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
             mInterpolator = intercepter;
         }
     }
-
-    @Override
-    public void setDelay(int delay) {
-        mDelayTime = delay;
-    }
-
-//    @Override
-//    public void setRepeatMode(@WeatherItemRepeatMode int repeatMode) {
-//        mRepeatMode = repeatMode;
-//    }
 }

@@ -32,13 +32,13 @@ public class CloudlyDrawable extends SunDrawable {
         float sunCX = 180f / 250 * w;
         float sunCY = 110f / 250 * w;
 
-        sun.setBounds(new Rect((int) (sunCX - hSunW), (int) (sunCY - hSunW), (int) (sunCX + hSunW), (int) (sunCY + hSunW)));
+        sun.setBounds((int) (sunCX - hSunW), (int) (sunCY - hSunW), (int) (sunCX + hSunW), (int) (sunCY + hSunW));
         weatherItems.add(sun);
 
         Cloud cloud = new Cloud();
         int cloudLeft = rect.left + (int) (-rect.width() * 0.08f);
         int cloudTop = rect.top + (int) (0.25f * rect.width());
-        cloud.setBounds(new Rect(cloudLeft, cloudTop, cloudLeft + rect.width(), cloudTop + rect.height()));
+        cloud.setBounds(cloudLeft, cloudTop, cloudLeft + rect.width(), cloudTop + rect.height());
         weatherItems.add(cloud);
     }
 }

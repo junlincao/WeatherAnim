@@ -13,6 +13,8 @@ import android.os.SystemClock;
 import com.mlog.weather.anim.weatherItem.IWeatherItem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,12 +29,15 @@ public abstract class WeatherDrawable extends Drawable {
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private ArrayList<IWeatherItem> mWeatherItems = new ArrayList<>();
+    private LinkedList<IWeatherItem> mWeatherRandomItems = new LinkedList<>();
+
+    private ArrayList<IWeatherRandomItem> mRandomItems = new ArrayList<>();
 
     protected boolean mIsRunning = false;
 
     /**
      * 启动动画
-     * <p/>
+     * <p>
      * 除非调用stopAnimation，否则不会停止
      */
     public void startAnimation() {
@@ -48,20 +53,36 @@ public abstract class WeatherDrawable extends Drawable {
             }
         });
 
-        long time = SystemClock.elapsedRealtime();
+        final long time = SystemClock.elapsedRealtime();
         for (IWeatherItem wi : mWeatherItems) {
             wi.start(time);
         }
+
+        for (final IWeatherRandomItem wri : mRandomItems) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mIsRunning) {
+                        return;
+                    }
+                    IWeatherItem iwi = wri.getRandomWeatherItem();
+                    mWeatherRandomItems.add(iwi);
+                    iwi.start(SystemClock.elapsedRealtime());
+                    mHandler.postDelayed(this, wri.getInterval());
+                }
+            });
+        }
         mIsRunning = true;
     }
-
 
     @Override
     public void setBounds(int left, int top, int right, int bottom) {
         super.setBounds(left, top, right, bottom);
 
         mWeatherItems.clear();
+        mRandomItems.clear();
         addWeatherItem(mWeatherItems, getBounds());
+        addRandomItem(mRandomItems, getBounds());
         if (!mIsRunning) {
             startAnimation();
         }
@@ -72,6 +93,16 @@ public abstract class WeatherDrawable extends Drawable {
         long time = SystemClock.elapsedRealtime();
         for (IWeatherItem wi : mWeatherItems) {
             wi.onDraw(canvas, mPaint, time);
+        }
+
+        Iterator ri = mWeatherRandomItems.iterator();
+        while (ri.hasNext()) {
+            IWeatherItem wi = (IWeatherItem) ri.next();
+            if (wi.getStatus() == IWeatherItem.STATUS_ENDED) {
+                ri.remove();
+            } else {
+                wi.onDraw(canvas, mPaint, time);
+            }
         }
     }
 
@@ -113,4 +144,14 @@ public abstract class WeatherDrawable extends Drawable {
      * @param rect         Drawable Bounds
      */
     abstract void addWeatherItem(List<IWeatherItem> weatherItems, Rect rect);
+
+    /**
+     * 添加自动随机生成天气元素
+     *
+     * @param randomItems 自动生成类
+     * @param rect        Drawable Bounds
+     */
+    protected void addRandomItem(List<IWeatherRandomItem> randomItems, Rect rect) {
+    }
+
 }

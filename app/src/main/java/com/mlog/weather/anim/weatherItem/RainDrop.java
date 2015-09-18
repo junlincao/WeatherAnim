@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 
 /**
  * 圆形的雨水
@@ -18,10 +19,11 @@ public class RainDrop extends SimpleWeatherItem {
     //动画持续时间 ms
     static final int ANIM_DURATION = 800;
     // 透明度100中间点
-    static final int ALPHA_CENTER = 200;
+    static final int ALPHA_CENTER = 600;
 
     public RainDrop() {
-        mInterpolator = new AccelerateDecelerateInterpolator();
+//        mInterpolator = new AccelerateDecelerateInterpolator();
+        mInterpolator = new AccelerateInterpolator(0.8f);
     }
 
     /**
@@ -40,15 +42,11 @@ public class RainDrop extends SimpleWeatherItem {
         }
 
         int t = (int) (time - mStartTime);
-        if (t <= mDelayTime) {
-            return;
-        }
-        t -= mDelayTime;
 
         if (t < ANIM_DURATION) {
             int alpha;
             if (t < ALPHA_CENTER) {
-                alpha = 255 * t / ALPHA_CENTER;
+                alpha = 255;
             } else {
                 alpha = 255 - 255 * (t - ALPHA_CENTER) / (ANIM_DURATION - ALPHA_CENTER);
             }

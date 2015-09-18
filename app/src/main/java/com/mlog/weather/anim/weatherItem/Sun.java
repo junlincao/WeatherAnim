@@ -3,7 +3,6 @@ package com.mlog.weather.anim.weatherItem;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -68,20 +67,31 @@ public class Sun extends SimpleWeatherItem {
     }
 
     @Override
-    public void setBounds(Rect rect) {
-        super.setBounds(rect);
+    public void setBounds(int left, int top, int right, int bottom) {
+        super.setBounds(left, top, right, bottom);
 
-        float scale = (202f / 250) * rect.width() / mD3.getIntrinsicWidth();
+        float scale = (202f / 250) * mBounds.width() / mD3.getIntrinsicWidth();
+
+        final int centerX = mBounds.centerX();
+        final int centerY = mBounds.centerY();
 
         int hD3W = (int) (mD3.getIntrinsicWidth() * scale * 0.5f);
-        mD3.setBounds(rect.centerX() - hD3W, rect.centerY() - hD3W, rect.centerX() + hD3W, rect.centerY() + hD3W);
+        mD3.setBounds(centerX - hD3W, centerY - hD3W, centerX + hD3W, centerY + hD3W);
 
         int hD2W = (int) (mD2.getIntrinsicWidth() * scale * 0.5f);
-        mD2.setBounds(rect.centerX() - hD2W, rect.centerY() - hD2W, rect.centerX() + hD2W, rect.centerY() + hD2W);
+        mD2.setBounds(centerX - hD2W, centerY - hD2W, centerX + hD2W, centerY + hD2W);
 
         int hD1W = (int) (mD1.getIntrinsicWidth() * scale * 0.5f);
-        mD1.setBounds(rect.centerX() - hD1W, rect.centerY() - hD1W, rect.centerX() + hD1W, rect.centerY() + hD1W);
+        mD1.setBounds(centerX - hD1W, centerY - hD1W, centerX + hD1W, centerY + hD1W);
+
+        centerCircleR = 46f / 250 * mBounds.width();
+        outerCircleR = 60f / 250 * mBounds.width();
+        waveCircleR = 112.5f / 250 * mBounds.width();
     }
+
+    private float centerCircleR;
+    private float outerCircleR;
+    private float waveCircleR;
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
@@ -116,10 +126,10 @@ public class Sun extends SimpleWeatherItem {
         }
 
         paint.setColor(Color.WHITE);
-        canvas.drawCircle(centerX, centerY, 50f / 250 * mBounds.width(), paint);
+        canvas.drawCircle(centerX, centerY, centerCircleR, paint);
 
         paint.setColor(0x99ffffff);
-        canvas.drawCircle(centerX, centerY, 62.5f / 250 * mBounds.width(), paint);
+        canvas.drawCircle(centerX, centerY, outerCircleR, paint);
 
         if (mShowWave) {
             t %= WAVE_DELTA;
@@ -130,8 +140,7 @@ public class Sun extends SimpleWeatherItem {
                     int alpha = (int) (255 * (1 - progress));
                     paint.setColor(Color.argb(alpha, 255, 255, 255));
 
-                    float r = 112.5f / 250 * mBounds.width() * progress;
-                    canvas.drawCircle(centerX, centerY, r, paint);
+                    canvas.drawCircle(centerX, centerY, waveCircleR * progress, paint);
                 }
             }
         }
