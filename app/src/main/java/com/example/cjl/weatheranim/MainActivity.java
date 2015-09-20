@@ -6,15 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mlog.weather.anim.drawable.CloudlyDrawable;
 import com.mlog.weather.anim.drawable.CloudsDrawable;
+import com.mlog.weather.anim.drawable.FogDrawable;
 import com.mlog.weather.anim.drawable.FreezingRainDrawable;
 import com.mlog.weather.anim.drawable.HailDrawable;
+import com.mlog.weather.anim.drawable.HazeDrawable;
 import com.mlog.weather.anim.drawable.MoonDrawable;
 import com.mlog.weather.anim.drawable.RainAndSnowDrawable;
 import com.mlog.weather.anim.drawable.RainDrawable;
+import com.mlog.weather.anim.drawable.SandStormDrawable;
 import com.mlog.weather.anim.drawable.ShowerDrawable;
 import com.mlog.weather.anim.drawable.SnowDrawable;
 import com.mlog.weather.anim.drawable.SnowShowerDrawable;
 import com.mlog.weather.anim.drawable.SunDrawable;
+import com.mlog.weather.anim.drawable.ThundersShowerDrawable;
 import com.mlog.weather.anim.drawable.WeatherDrawable;
 
 import java.util.LinkedHashMap;
@@ -46,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
         datas.put("阴天", new CloudlyDrawable());
         datas.put("白天阵雨", new ShowerDrawable(this, CloudsDrawable.TYPE_DAY));
         datas.put("晚上阵雨", new ShowerDrawable(this, CloudsDrawable.TYPE_NIGHT));
-        //TODO
-        //"雷阵雨"
+        datas.put("雷阵雨", new ThundersShowerDrawable(this));
         datas.put("冰雹", new HailDrawable());
         datas.put("雨夹雪", new RainAndSnowDrawable(this));
         datas.put("小雨", new RainDrawable(RainDrawable.RAIN_TYPE_SMALL));
@@ -55,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         datas.put("白天阵雪", new SnowShowerDrawable(this, CloudsDrawable.TYPE_DAY));
         datas.put("晚上阵雪", new SnowShowerDrawable(this, CloudsDrawable.TYPE_NIGHT));
         datas.put("雪", new SnowDrawable(this));
-        // "雾"
+        datas.put("雾", new FogDrawable(this));
         datas.put("冻雨", new FreezingRainDrawable());
-        //"霾"
-        //"沙尘暴"
+        datas.put("霾", new HazeDrawable(this));
+        datas.put("沙尘暴", new SandStormDrawable(this));
 
         return datas;
     }

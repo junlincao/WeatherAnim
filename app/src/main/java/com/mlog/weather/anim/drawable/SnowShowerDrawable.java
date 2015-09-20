@@ -44,7 +44,7 @@ public class SnowShowerDrawable extends ShowerDrawable {
         IWeatherRandomItem snow = new IWeatherRandomItem() {
             @Override
             public int getInterval() {
-                return 270;
+                return 300;
             }
 
             @Override
