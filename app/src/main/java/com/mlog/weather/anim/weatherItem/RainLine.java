@@ -3,7 +3,6 @@ package com.mlog.weather.anim.weatherItem;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -34,10 +33,10 @@ public class RainLine extends SimpleWeatherItem {
 
     // 下落总长度
     float dropLen;
-    double angle;
+    // 倾斜角度
+    float angle;
 
     public RainLine() {
-//        mInterpolator = new AccelerateDecelerateInterpolator();
         mInterpolator = new AccelerateInterpolator(0.8f);
     }
 
@@ -67,7 +66,7 @@ public class RainLine extends SimpleWeatherItem {
 
         int h = mBounds.height();
         dropLen = (float) Math.sqrt(mXShift * mXShift + h * h);
-        angle = Math.atan2(h, mXShift);
+        angle = (float) (90 - Math.toDegrees(Math.atan2(h, mXShift)));
     }
 
     Interpolator mExpandInterpolator = new DecelerateInterpolator(0.8f);
@@ -93,21 +92,22 @@ public class RainLine extends SimpleWeatherItem {
             float len = t < DROP_DURATION ? mMinLen + (mMaxLen - mMinLen) * progressDrop : mMaxLen;
             int alpha = t < DROP_DURATION ? (int) (255 * progressDrop) : 255;
 
-            float p2x = mBounds.centerX() - mXShift * progressDrop;
-            float p2y = mBounds.top - mMinLen + mBounds.height() * progressDrop;
-            float p1x = (float) (p2x - len * Math.cos(angle));
-            float p1y = (float) (p2y + len * Math.sin(angle));
+            float cx = mBounds.centerX() - mXShift * progressDrop;
+            float cy = mBounds.top - mMinLen / 2 + mBounds.height() * progressDrop;
 
             paint.setColor(Color.argb(alpha, 255, 255, 255));
-            canvas.drawLine(p1x, p1y, p2x, p2y, paint); //TODO 应该旋转画布画圆角矩形
+            float hw = mBounds.width() / 2f;
+            canvas.save();
+            canvas.rotate(angle, cx, cy);
+            tmpRect.set(cx - hw, cy - len / 2, cx + hw, cy + len / 2);
+            canvas.drawRoundRect(tmpRect, hw, hw, paint);
+            canvas.restore();
         }
         if (t > EXPAND_START) {
             float pbx = mBounds.centerX() - mXShift;
-//            float pby = mBounds.bottom - mBounds.width() / 2f - 1;
             int alpha = t < EXPAND_ALPHA_START ? 255 : (int) (255 - 255f * (t - EXPAND_ALPHA_START) / (ANIM_DURATION - EXPAND_ALPHA_START));
             float len = mMaxLen * mExpandInterpolator.getInterpolation((t - EXPAND_START) * 1f / (ANIM_DURATION - EXPAND_START));
             paint.setColor(Color.argb(alpha, 255, 255, 255));
-//            canvas.drawLine(pbx - len / 2, pby, pbx + len / 2, pby, paint);
 
             tmpRect.set(pbx - len / 2, mBounds.bottom - mBounds.width(), pbx + len / 2, mBounds.bottom);
             canvas.drawRoundRect(tmpRect, mBounds.width() / 2, mBounds.width() / 2, paint);

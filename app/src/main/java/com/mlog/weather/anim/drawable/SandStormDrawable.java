@@ -45,7 +45,7 @@ public class SandStormDrawable extends WeatherDrawable {
         IWeatherRandomItem iri = new IWeatherRandomItem() {
             @Override
             public int getInterval() {
-                return 700;
+                return 450;
             }
 
             @Override

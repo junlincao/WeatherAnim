@@ -3,6 +3,7 @@ package com.mlog.weather.anim.weatherItem;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 /**
  * 尘埃
@@ -14,18 +15,19 @@ public class Dust extends SimpleWeatherItem {
 
     int halfSize;
     float speed;
-    int alphaStartLen;
+    int alphaDisappearLen;
+    int alphaShowLen;
 
     @Override
     public void setBounds(int left, int top, int right, int bottom) {
         super.setBounds(left, top, right, bottom);
 
-
         // 若宽度大于高度，则表示从左往右移动，否则从下往上移动
         halfSize = Math.min(mBounds.width(), mBounds.height());
         speed = halfSize * 15f / 1000;
 
-        alphaStartLen = (int) (Math.max(mBounds.width(), mBounds.height()) * 0.15f);
+        alphaDisappearLen = (int) (Math.max(mBounds.width(), mBounds.height()) * 0.1f);
+        alphaShowLen = (int) (alphaDisappearLen * 0.8f);
     }
 
     @Override
@@ -44,8 +46,10 @@ public class Dust extends SimpleWeatherItem {
                 stop();
                 return;
             }
-            if (centerX - mBounds.left > alphaStartLen) {
-                alpha = (int) (255 - 255f * (centerX - mBounds.left - alphaStartLen) / (mBounds.width() - alphaStartLen));
+            if (centerX - mBounds.left > alphaDisappearLen) {
+                alpha = (int) (255 - 255f * (centerX - mBounds.left - alphaDisappearLen) / (mBounds.width() - alphaDisappearLen));
+            } else if(centerX - mBounds.left < alphaShowLen){
+                alpha = (int) (255f * (centerX - mBounds.left) / alphaShowLen);
             }
         } else {
             centerX = mBounds.centerX();
@@ -54,11 +58,13 @@ public class Dust extends SimpleWeatherItem {
                 stop();
                 return;
             }
-            if (mBounds.bottom - centerY > alphaStartLen) {
-                alpha = (int) (255 - 255f * (mBounds.bottom - centerY - alphaStartLen) / (mBounds.height() - alphaStartLen));
+            if (mBounds.bottom - centerY > alphaDisappearLen) {
+                alpha = (int) (255 - 255f * (mBounds.bottom - centerY - alphaDisappearLen) / (mBounds.height() - alphaDisappearLen));
+            } else if(mBounds.bottom - centerY < alphaShowLen){
+                alpha = (int) (255f * (mBounds.bottom - centerY) / alphaShowLen);
             }
         }
-        paint.setColor(Color.argb(alpha, 255, 255, 255));
+        paint.setColor(Color.argb(alpha < 0 ? 0 : alpha, 255, 255, 255));
 
         canvas.save();
         canvas.rotate(45, centerX, centerY);
