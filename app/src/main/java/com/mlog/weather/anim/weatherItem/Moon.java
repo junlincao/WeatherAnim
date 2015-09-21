@@ -43,10 +43,10 @@ public class Moon extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
-        int t = ((int) (time - mStartTime)) % ANIM_DURATION;
+        int t = ((int) (time - getStartTime())) % ANIM_DURATION;
         float stopTime = ANIM_DURATION * 0.5f - MOVE_DURATION;
 
         int centerY;

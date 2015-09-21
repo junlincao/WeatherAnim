@@ -33,10 +33,10 @@ public class Light extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
-        int t = ((int) (time - mStartTime)) % ANIM_DURATION;
+        int t = ((int) (time - getStartTime())) % ANIM_DURATION;
 
         if ((t >= FIRST_LIGHT_START && t <= FIRST_LIGHT_START + LIGHT_DURATION)
                 || (t >= SECOND_LIGHT_START && t <= SECOND_LIGHT_START + LIGHT_DURATION)

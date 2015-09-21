@@ -1,13 +1,10 @@
 package com.mlog.weather.anim.drawable;
 
 import android.graphics.Rect;
-import android.os.SystemClock;
-import android.support.annotation.Nullable;
 
 import com.mlog.weather.anim.weatherItem.Cloud;
 import com.mlog.weather.anim.weatherItem.Hail;
 import com.mlog.weather.anim.weatherItem.IWeatherItem;
-import com.mlog.weather.anim.weatherItem.IWeatherItemCallback;
 
 import java.util.List;
 import java.util.Random;

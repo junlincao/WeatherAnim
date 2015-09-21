@@ -17,14 +17,13 @@ import java.lang.annotation.RetentionPolicy;
  * @since 2015-09-11
  */
 public interface IWeatherItem {
-    @IntDef({STATUS_NOT_START, STATUS_RUNNING, STATUS_ENDED})
+    @IntDef({STATUS_NOT_START, STATUS_RUNNING})
     @Retention(RetentionPolicy.SOURCE)
     @interface WeatherItemStatus {
     }
 
     int STATUS_NOT_START = 0;
     int STATUS_RUNNING = 1;
-    int STATUS_ENDED = 2;
 
     void setCallback(IWeatherItemCallback callback);
 

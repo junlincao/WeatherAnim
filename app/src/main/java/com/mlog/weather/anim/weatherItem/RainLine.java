@@ -74,11 +74,11 @@ public class RainLine extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
 
-        int t = (int) (time - mStartTime);
+        int t = (int) (time - getStartTime());
 
         int w = mBounds.width();
         paint.setStrokeWidth(w);

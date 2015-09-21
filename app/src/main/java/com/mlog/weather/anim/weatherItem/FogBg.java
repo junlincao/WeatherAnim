@@ -27,7 +27,7 @@ public class FogBg extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
         mFogBg.draw(canvas);

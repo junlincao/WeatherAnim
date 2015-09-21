@@ -32,11 +32,11 @@ public class FreezingRainDrop extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
 
-        int t = (int) (time - mStartTime);
+        int t = (int) (time - getStartTime());
         if (t > mDropTime) {
             stop();
             return;

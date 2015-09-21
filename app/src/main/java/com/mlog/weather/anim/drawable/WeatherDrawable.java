@@ -37,7 +37,7 @@ public abstract class WeatherDrawable extends Drawable {
 
     /**
      * 启动动画
-     * <p>
+     * <p/>
      * 除非调用stopAnimation，否则不会停止
      */
     public void startAnimation() {
@@ -65,6 +65,7 @@ public abstract class WeatherDrawable extends Drawable {
                     if (!mIsRunning) {
                         return;
                     }
+
                     IWeatherItem iwi = wri.getRandomWeatherItem();
                     mWeatherRandomItems.add(iwi);
                     iwi.start(SystemClock.elapsedRealtime());
@@ -72,35 +73,47 @@ public abstract class WeatherDrawable extends Drawable {
                 }
             });
         }
+
+        final int allocateDelay = 3000;
+        // 每隔一定时间清理已经无效的随机天气元素
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!mIsRunning) {
+                    return;
+                }
+                for (Iterator<IWeatherItem> it = mWeatherRandomItems.iterator(); it.hasNext(); ) {
+                    if (it.next().getStatus() == IWeatherItem.STATUS_NOT_START) {
+                        it.remove();
+                    }
+                }
+                mHandler.postDelayed(this, allocateDelay);
+            }
+        }, allocateDelay);
         mIsRunning = true;
     }
 
     @Override
-    public void setBounds(int left, int top, int right, int bottom) {
-        super.setBounds(left, top, right, bottom);
+    protected void onBoundsChange(Rect bounds) {
+        super.onBoundsChange(bounds);
 
         mWeatherItems.clear();
         mRandomItems.clear();
         addWeatherItem(mWeatherItems, getBounds());
         addRandomItem(mRandomItems, getBounds());
-        if (!mIsRunning) {
-            startAnimation();
-        }
+        startAnimation();
     }
 
     @Override
     public void draw(Canvas canvas) {
         long time = SystemClock.elapsedRealtime();
-        for (IWeatherItem wi : mWeatherItems) {
+        for (int i = 0, size = mWeatherItems.size(); i < size; i++) {
+            IWeatherItem wi = mWeatherItems.get(i);
             wi.onDraw(canvas, mPaint, time);
         }
-
-        Iterator ri = mWeatherRandomItems.iterator();
-        while (ri.hasNext()) {
-            IWeatherItem wi = (IWeatherItem) ri.next();
-            if (wi.getStatus() == IWeatherItem.STATUS_ENDED) {
-                ri.remove();
-            } else {
+        for (int i = 0, randomSize = mWeatherRandomItems.size(); i < randomSize; i++) {
+            IWeatherItem wi = mWeatherRandomItems.get(i);
+            if (wi.getStatus() == IWeatherItem.STATUS_RUNNING) {
                 wi.onDraw(canvas, mPaint, time);
             }
         }

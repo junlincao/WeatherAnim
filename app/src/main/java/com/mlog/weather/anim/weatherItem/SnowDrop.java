@@ -23,10 +23,10 @@ public class SnowDrop extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
-        int t = (int) (time - mStartTime);
+        int t = (int) (time - getStartTime());
 
         if (t < ANIM_DURATION) {
             int alpha;

@@ -21,9 +21,9 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
     /**
      * 动画开始时间
      **/
-    protected long mStartTime;
+    private long mStartTime = -1;
 
-    protected int mStatus = STATUS_NOT_START;
+    private int mStatus = STATUS_NOT_START;
 
 
     @Override
@@ -46,10 +46,14 @@ public abstract class SimpleWeatherItem implements IWeatherItem {
     public void stop() {
         mStartTime = -1;
 
-        mStatus = STATUS_ENDED;
+        mStatus = STATUS_NOT_START;
         if (mCallBack != null) {
             mCallBack.onAnimFinish(this);
         }
+    }
+
+    protected long getStartTime(){
+        return mStartTime;
     }
 
     @Override

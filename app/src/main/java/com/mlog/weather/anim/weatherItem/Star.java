@@ -24,7 +24,7 @@ public class Star extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        int t = (int) (time - mStartTime);
+        int t = (int) (time - getStartTime());
 
         if (t > ANIM_DURATION) {
             stop();

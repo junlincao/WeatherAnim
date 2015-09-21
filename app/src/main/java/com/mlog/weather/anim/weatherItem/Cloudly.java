@@ -115,7 +115,7 @@ public class Cloudly extends SimpleWeatherItem {
 
     @Override
     public void onDraw(Canvas canvas, Paint paint, long time) {
-        if (mStartTime == -1) {
+        if (getStatus() == STATUS_NOT_START) {
             return;
         }
         float stopTime = ANIM_DURATION / 2f - MOVE_DURATION;
@@ -123,7 +123,7 @@ public class Cloudly extends SimpleWeatherItem {
         int count = mCircleMsg.size();
         for (int i = 0; i < count; i++) {
             float delayTime = MOVE_DELTA * i;
-            int t = ((int) (time - mStartTime - delayTime)) % ANIM_DURATION;
+            int t = ((int) (time - getStartTime() - delayTime)) % ANIM_DURATION;
 
             CircleMsg cm = mCircleMsg.get(i);
 
